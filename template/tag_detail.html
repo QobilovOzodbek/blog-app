@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ tag.name }} | Teg{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <!-- TAG TITLE -->
+    <h1 class="detail-title">#{{ tag.name }}</h1>
+    <p class="detail-date">Teg bo‘yicha postlar</p>
+
+    <!-- POSTS GRID -->
+    <div class="cards">
+        {% for post in posts %}
+        <a href="/{{ post.slug }}/" class="card"
+            data-tags="{% for t in post.tags.all %}{{ t.name|lower }} {% endfor %}">
+            <img src="{{ post.image.url }}" alt="image">
+            <div class="card-content">
+                <h3>{{ post.title }}</h3>
+                <p>{{ post.short_text }}</p>
+
+                <div class="tags">
+                    {% for t in post.tags.all %}
+                    <span class="tag">{{ t.name }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </a>
+        {% empty %}
+        <p>Bu teg bo‘yicha hech qanday post topilmadi.</p>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}
