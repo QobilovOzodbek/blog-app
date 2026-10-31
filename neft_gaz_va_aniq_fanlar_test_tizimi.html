@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Нефт-Газ ва Аниқ Фанлар Тест Тизими</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+        }
+        .option-btn {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .option-btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+        }
+        /* Custom scrollbar for question palette */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 flex flex-col justify-between">
+
+    <!-- Top Navigation Bar -->
+    <header class="bg-slate-900 text-white shadow-lg sticky top-0 z-30">
+        <div class="max-w-6xl mx-auto px-4 py-3.5 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center text-slate-950 font-extrabold text-xl shadow-md">
+                    НГ
+                </div>
+                <div>
+                    <h1 class="font-bold text-base sm:text-lg leading-tight">Нефт-Газ Синов Тизими</h1>
+                    <p class="text-xs text-slate-400">Математика, физика ва ишлаб чиқариш мантиғи</p>
+                </div>
+            </div>
+            <div id="header-controls" class="hidden flex items-center space-x-3 sm:space-x-4">
+                <div id="timer-box" class="flex items-center space-x-1.5 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-lg text-sm font-mono text-amber-400">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span id="timer-display">35:00</span>
+                </div>
+                <button onclick="showConfirmFinishModal()" class="bg-rose-600 hover:bg-rose-700 text-white text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-lg transition shadow">
+                    Якунлаш
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-6 sm:py-8">
+
+        <!-- 1. START / SETTINGS SCREEN -->
+        <section id="start-screen" class="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl border border-slate-200/80 overflow-hidden">
+            <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 p-6 sm:p-8 text-white relative overflow-hidden">
+                <div class="relative z-10">
+                    <span class="inline-block bg-amber-500/20 border border-amber-400/30 text-amber-300 text-xs font-semibold px-3 py-1 rounded-full mb-3">
+                        Интерактив Тренажёр ва Имтиҳон
+                    </span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold mb-2">Математика, физика, нефт-газ соҳаси ва ишлаб чиқариш мантиғи</h2>
+                    <p class="text-slate-300 text-sm">Билимингизни синаб кўринг. Саволларни асл базадан ёки автоматик генерация орқали янги сонлар билан ишлашингиз мумкин.</p>
+                </div>
+            </div>
+
+            <div class="p-6 sm:p-8 space-y-6">
+                <!-- Mode Selection -->
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-3">1. Тест режимини танланг:</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="quiz-mode" value="dynamic" class="peer sr-only" checked>
+                            <div class="p-4 rounded-xl border-2 border-slate-200 peer-checked:border-amber-500 peer-checked:bg-amber-50/50 hover:bg-slate-50 transition h-full">
+                                <div class="flex items-center justify-between mb-1.5">
+                                    <span class="font-bold text-slate-900 text-sm">⚡ Генерация режими</span>
+                                    <span class="text-[11px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded">Тавсия этилади</span>
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">Ҳар сафар янги сонли математик ва физик масалалар генерация қилинади ҳамда назарий саволлар аралаштирилади.</p>
+                            </div>
+                        </label>
+
+                        <label class="cursor-pointer">
+                            <input type="radio" name="quiz-mode" value="original" class="peer sr-only">
+                            <div class="p-4 rounded-xl border-2 border-slate-200 peer-checked:border-amber-500 peer-checked:bg-amber-50/50 hover:bg-slate-50 transition h-full">
+                                <div class="flex items-center justify-between mb-1.5">
+                                    <span class="font-bold text-slate-900 text-sm">📋 Асосий база (Асл 35 та)</span>
+                                </div>
+                                <p class="text-xs text-slate-600 leading-relaxed">Ҳужжатда берилган аниқ 35 та савол ва жавоб вариантларининг ўзи тасодифий ўрин алмашган ҳолда тушади.</p>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question Count Selection -->
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 mb-2">2. Саволлар сони:</label>
+                    <div class="grid grid-cols-4 gap-2.5">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="question-count" value="10" class="peer sr-only">
+                            <div class="py-2.5 text-center rounded-xl border-2 border-slate-200 font-semibold text-sm peer-checked:border-slate-900 peer-checked:bg-slate-900 peer-checked:text-white transition">
+                                10 та
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="question-count" value="20" class="peer sr-only">
+                            <div class="py-2.5 text-center rounded-xl border-2 border-slate-200 font-semibold text-sm peer-checked:border-slate-900 peer-checked:bg-slate-900 peer-checked:text-white transition">
+                                20 та
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="question-count" value="35" class="peer sr-only" checked>
+                            <div class="py-2.5 text-center rounded-xl border-2 border-slate-200 font-semibold text-sm peer-checked:border-slate-900 peer-checked:bg-slate-900 peer-checked:text-white transition">
+                                35 та
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="question-count" value="50" class="peer sr-only">
+                            <div class="py-2.5 text-center rounded-xl border-2 border-slate-200 font-semibold text-sm peer-checked:border-slate-900 peer-checked:bg-slate-900 peer-checked:text-white transition">
+                                50 та
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Check Mode & Timer Options -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
+                    <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
+                        <input type="checkbox" id="instant-feedback-toggle" class="w-5 h-5 accent-amber-500 rounded cursor-pointer" checked>
+                        <div>
+                            <span class="block text-sm font-semibold text-slate-800">Жавобни дарҳол текшириш</span>
+                            <span class="block text-xs text-slate-500">Белгиланганда тўғри/хатолиги ва изоҳи чиқади</span>
+                        </div>
+                    </label>
+
+                    <label class="flex items-center space-x-3 p-3 rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
+                        <input type="checkbox" id="timer-toggle" class="w-5 h-5 accent-amber-500 rounded cursor-pointer" checked>
+                        <div>
+                            <span class="block text-sm font-semibold text-slate-800">Вақт чегараси билан</span>
+                            <span class="block text-xs text-slate-500">Ҳар бир савол учун 1 дақиқа вақт берилади</span>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Start Button -->
+                <button onclick="startQuiz()" class="w-full py-4 bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-slate-950 font-extrabold rounded-xl shadow-lg shadow-amber-500/25 transition flex items-center justify-center space-x-2 text-base">
+                    <span>Тестни бошлаш</span>
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                    </svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- 2. QUIZ INTERFACE SCREEN -->
+        <section id="quiz-screen" class="hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+                <!-- Left / Main Question Area -->
+                <div class="lg:col-span-8 bg-white rounded-2xl shadow-lg border border-slate-200/80 overflow-hidden">
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-slate-100 h-2">
+                        <div id="progress-bar" class="bg-amber-500 h-2 transition-all duration-300" style="width: 0%"></div>
+                    </div>
+
+                    <div class="p-5 sm:p-8">
+                        <!-- Question Meta -->
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-2">
+                                <span id="question-counter" class="bg-slate-900 text-white text-xs font-bold px-3 py-1 rounded-full">
+                                    Савол 1 / 35
+                                </span>
+                                <span id="question-category-badge" class="bg-slate-100 text-slate-700 text-xs font-semibold px-2.5 py-1 rounded-full">
+                                    Математика
+                                </span>
+                            </div>
+                            <span id="generated-badge" class="hidden text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-md">
+                                🎲 Янги генерация
+                            </span>
+                        </div>
+
+                        <!-- Question Text -->
+                        <h3 id="question-text" class="text-lg sm:text-xl font-bold text-slate-900 leading-snug mb-6">
+                            Савол юкланмоқда...
+                        </h3>
+
+                        <!-- Answer Options Container -->
+                        <div id="options-container" class="space-y-3">
+                            <!-- Filled dynamically -->
+                        </div>
+
+                        <!-- Explanation Box (Shown when instant feedback is enabled and answered) -->
+                        <div id="explanation-box" class="hidden mt-5 p-4 rounded-xl bg-blue-50 border border-blue-200 text-blue-900 text-sm">
+                            <div class="font-bold mb-1 flex items-center space-x-1.5">
+                                <svg class="w-4 h-4 text-blue-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span>Ечим ва изоҳ:</span>
+                            </div>
+                            <p id="explanation-text" class="text-xs sm:text-sm text-blue-800 leading-relaxed"></p>
+                        </div>
+
+                        <!-- Navigation Buttons -->
+                        <div class="mt-8 pt-5 border-t border-slate-100 flex items-center justify-between">
+                            <button id="prev-btn" onclick="prevQuestion()" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 font-semibold text-sm transition disabled:opacity-40 disabled:pointer-events-none flex items-center space-x-1.5">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                <span>Олдинги</span>
+                            </button>
+
+                            <button id="next-btn" onclick="nextQuestion()" class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm transition flex items-center space-x-1.5">
+                                <span id="next-btn-text">Кейинги</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right / Question Palette Sidebar -->
+                <div class="lg:col-span-4 bg-white rounded-2xl shadow-lg border border-slate-200/80 p-5 sticky top-20">
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="font-bold text-sm text-slate-800">Саволлар харитаси</h4>
+                        <span id="answered-count-text" class="text-xs font-semibold text-slate-500">0 / 35 белгиланди</span>
+                    </div>
+
+                    <!-- Grid of Question Numbers -->
+                    <div id="palette-grid" class="grid grid-cols-7 gap-2 max-h-64 overflow-y-auto pr-1">
+                        <!-- Dynamically populated -->
+                    </div>
+
+                    <!-- Legend -->
+                    <div class="mt-4 pt-3 border-t border-slate-100 grid grid-cols-2 gap-2 text-xs text-slate-600">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded bg-amber-500 inline-block"></span>
+                            <span>Жорий савол</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded bg-slate-800 inline-block"></span>
+                            <span>Белгиланган</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded bg-emerald-500 inline-block"></span>
+                            <span>Тўғри (дарҳол)</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded bg-rose-500 inline-block"></span>
+                            <span>Хато (дарҳол)</span>
+                        </div>
+                    </div>
+
+                    <button onclick="showConfirmFinishModal()" class="mt-5 w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm transition shadow">
+                        Тестни якунлаш ва натижани кўриш
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 3. RESULTS SCREEN -->
+        <section id="results-screen" class="hidden space-y-6">
+            <!-- Summary Card -->
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-200/80 p-6 sm:p-8">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="text-center md:text-left">
+                        <span id="result-badge" class="inline-block px-3 py-1 rounded-full text-xs font-bold mb-2 bg-emerald-100 text-emerald-800">
+                            Тест якунланди
+                        </span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-1" id="result-title">Натижангиз</h2>
+                        <p class="text-sm text-slate-500" id="result-subtitle">Барча жавоблар таҳлили қуйида келтирилган.</p>
+
+                        <div class="mt-6 flex flex-wrap justify-center md:justify-start gap-3">
+                            <button onclick="restartSameSettings()" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded-xl text-sm transition shadow-md flex items-center space-x-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                                <span>Янги саволлар билан қайта бошлаш</span>
+                            </button>
+                            <button onclick="backToMenu()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-sm transition">
+                                Бош менюга қайтиш
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Stats Boxes -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full md:w-auto">
+                        <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl text-center min-w-[110px]">
+                            <span class="block text-2xl font-extrabold text-slate-900" id="stat-percent">0%</span>
+                            <span class="text-xs text-slate-500 font-medium">Кўрсаткич</span>
+                        </div>
+                        <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-2xl text-center min-w-[110px]">
+                            <span class="block text-2xl font-extrabold text-emerald-700" id="stat-correct">0</span>
+                            <span class="text-xs text-emerald-600 font-medium">Тўғри</span>
+                        </div>
+                        <div class="bg-rose-50 border border-rose-200 p-4 rounded-2xl text-center min-w-[110px]">
+                            <span class="block text-2xl font-extrabold text-rose-700" id="stat-wrong">0</span>
+                            <span class="text-xs text-rose-600 font-medium">Хато</span>
+                        </div>
+                        <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl text-center min-w-[110px]">
+                            <span class="block text-2xl font-extrabold text-amber-700" id="stat-time">00:00</span>
+                            <span class="text-xs text-amber-700 font-medium">Сарфланган вақт</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Review Section -->
+            <div class="bg-white rounded-2xl shadow-lg border border-slate-200/80 p-6 sm:p-8">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-4 border-b border-slate-100">
+                    <h3 class="text-lg font-bold text-slate-900">Саволлар ва жавоблар таҳлили</h3>
+                    <div class="flex space-x-2">
+                        <button onclick="filterReview('all')" id="filter-all" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-white">Барчаси</button>
+                        <button onclick="filterReview('wrong')" id="filter-wrong" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">Фақат хатолар</button>
+                        <button onclick="filterReview('correct')" id="filter-correct" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">Фақат тўғрилар</button>
+                    </div>
+                </div>
+
+                <div id="review-list" class="space-y-4">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Custom Confirmation Modal -->
+    <div id="confirm-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
+            <h3 class="text-lg font-bold text-slate-900 mb-2">Тестни якунлайсизми?</h3>
+            <p id="confirm-modal-desc" class="text-sm text-slate-600 mb-6">Белгиланмаган саволлар хато сифатида ҳисобланади.</p>
+            <div class="flex justify-end space-x-3">
+                <button onclick="closeConfirmFinishModal()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm">
+                    Давом этиш
+                </button>
+                <button onclick="finishQuiz()" class="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-sm shadow">
+                    Ҳа, якунлаш
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center py-5 text-xs text-slate-400 border-t border-slate-200/60 bg-white">
+        Математика, физика, нефт-газ соҳаси ва ишлаб чиқариш мантиғи бўйича интерактив синов платформаси
+    </footer>
+
+    <script>
+        // ==========================================
+        // 1. EXACT 35 BASE QUESTIONS FROM USER FILE
+        // ==========================================
+        const BASE_QUESTIONS = [
+            {
+                id: 1,
+                category: "Математика",
+                question: "Газ сарфи 420 000 м³/соат. 6 соатда қанча газ ўтади?",
+                correct: "2,52 млн м³",
+                options: ["2,12 млн м³", "2,52 млн м³", "2,82 млн м³", "3,20 млн м³"],
+                explanation: "420 000 м³/соат × 6 соат = 2 520 000 м³ = 2,52 млн м³."
+            },
+            {
+                id: 2,
+                category: "Математика",
+                question: "Қувурда босим 25 kgf/cm² дан 20 kgf/cm² гача тушди. Пасайиш неча фоиз?",
+                correct: "20%",
+                options: ["10%", "15%", "20%", "25%"],
+                explanation: "Фарқ: 25 - 20 = 5. Фоиз ҳисобида: (5 / 25) × 100% = 20%."
+            },
+            {
+                id: 3,
+                category: "Математика",
+                question: "Насос 240 м³/соат суюқлик ҳайдайди. 20 минутда қанча суюқлик ҳайдайди?",
+                correct: "80 м³",
+                options: ["60 м³", "80 м³", "100 м³", "120 м³"],
+                explanation: "20 минут = 1/3 соат. 240 м³/соат × (20 / 60) = 80 м³."
+            },
+            {
+                id: 4,
+                category: "Математика",
+                question: "Ички диаметри 1 м бўлган қувурнинг кесим юзаси қанча? π = 3,14.",
+                correct: "0,785 м²",
+                options: ["0,785 м²", "1,57 м²", "3,14 м²", "0,5 м²"],
+                explanation: "S = π × d² / 4 = 3,14 × 1² / 4 = 0,785 м²."
+            },
+            {
+                id: 5,
+                category: "Математика",
+                question: "Газ ишлаб чиқариш 8 т/соатдан 10 т/соатга ошди. Ўсиш неча фоиз?",
+                correct: "25%",
+                options: ["20%", "25%", "30%", "40%"],
+                explanation: "Ўсиш: 10 - 8 = 2 т/соат. Фоиз: (2 / 8) × 100% = 25%."
+            },
+            {
+                id: 6,
+                category: "Математика",
+                question: "3 та компрессорнинг ҳар бири 150 000 м³/соат газ ҳайдаса, умумий унумдорлик қанча?",
+                correct: "450 000 м³/соат",
+                options: ["300 000 м³/соат", "350 000 м³/соат", "450 000 м³/соат", "600 000 м³/соат"],
+                explanation: "3 × 150 000 м³/соат = 450 000 м³/соат."
+            },
+            {
+                id: 7,
+                category: "Математика",
+                question: "600 м узунликдаги қувурнинг 15% қисми алмаштирилса, неча метр қувур керак?",
+                correct: "90 м",
+                options: ["60 м", "75 м", "90 м", "120 м"],
+                explanation: "600 × 15 / 100 = 90 метр."
+            },
+            {
+                id: 8,
+                category: "Математика",
+                question: "x + 2x = 18 бўлса, x қанча?",
+                correct: "6",
+                options: ["3", "6", "9", "12"],
+                explanation: "3x = 18 => x = 18 / 3 = 6."
+            },
+            {
+                id: 9,
+                category: "Математика",
+                question: "Қурилма суткада 7200 м³ маҳсулот ишлаб чиқарса, ўртача соатлик ишлаб чиқариш қанча?",
+                correct: "300 м³/соат",
+                options: ["240 м³/соат", "300 м³/соат", "360 м³/соат", "400 м³/соат"],
+                explanation: "1 сутка = 24 соат. 7200 / 24 = 300 м³/соат."
+            },
+            {
+                id: 10,
+                category: "Математика",
+                question: "Қувур диаметри 2 марта оширилса, кесим юзаси неча марта ошади?",
+                correct: "4 марта",
+                options: ["2 марта", "3 марта", "4 марта", "8 марта"],
+                explanation: "Юза диаметрга квадрат пропорционал (S = πd²/4). Диаметр 2 марта ошса, юза 2² = 4 марта ошади."
+            },
+            {
+                id: 11,
+                category: "Физика",
+                question: "Ньютоннинг иккинчи қонуни қайси?",
+                correct: "F = ma",
+                options: ["F = ma", "P = F/S", "A = Fs", "Q = cmΔT"],
+                explanation: "Ньютоннинг иккинчи қонунига кўра куч масса ва тезланиш кўпайтмасига тенг: F = ma."
+            },
+            {
+                id: 12,
+                category: "Физика",
+                question: "20 кг жисмга 3 м/с² тезланиш берилди. Куч қанча?",
+                correct: "60 N",
+                options: ["23 N", "40 N", "60 N", "80 N"],
+                explanation: "F = m × a = 20 кг × 3 м/с² = 60 Н (Ньютон)."
+            },
+            {
+                id: 13,
+                category: "Физика",
+                question: "Босимнинг SI тизимидаги ўлчов бирлиги?",
+                correct: "Паскаль",
+                options: ["Ватт", "Паскаль", "Жоуль", "Ньютон"],
+                explanation: "Халқаро бирликлар тизимида (SI) босим Паскаль (Pa) билан ўлчанади."
+            },
+            {
+                id: 14,
+                category: "Физика",
+                question: "1 MPa неча Pa га тенг?",
+                correct: "1 000 000",
+                options: ["1 000", "10 000", "100 000", "1 000 000"],
+                explanation: "Мега (M) олд қўшимчаси 10⁶ яъни миллионни билдиради: 1 MPa = 1 000 000 Pa."
+            },
+            {
+                id: 15,
+                category: "Физика",
+                question: "Суюқликда чуқурлик ошган сари гидростатик босим қандай ўзгаради?",
+                correct: "Ортади",
+                options: ["Камаяди", "Ўзгармайди", "Ортади", "Нолга тушади"],
+                explanation: "P = ρgh формуласига асосан чуқурлик (h) ошган сари гидростатик босим ортади."
+            },
+            {
+                id: 16,
+                category: "Физика",
+                question: "Идеал газда температура ўзгармас бўлса, ҳажм камайганда абсолют босим:",
+                correct: "Ортади",
+                options: ["Камаяди", "Ортади", "Ўзгармайди", "Нол бўлади"],
+                explanation: "Бойль-Мариотт қонунига кўра (PV = const), ўзгармас температурада ҳажм камайса, босим ортади."
+            },
+            {
+                id: 17,
+                category: "Физика",
+                question: "Қувурда ҳажмий сарф Q, кесим юзаси S ва тезлик v орасидаги боғланиш қайси?",
+                correct: "Q = S·v",
+                options: ["Q = S/v", "Q = S·v", "Q = v/S", "Q = S+v"],
+                explanation: "Оқимнинг ҳажмий сарфи кўндаланг кесим юзаси ва оқим тезлиги кўпайтмасига тенг: Q = S·v."
+            },
+            {
+                id: 18,
+                category: "Физика",
+                question: "0°C тахминан неча Кельвин?",
+                correct: "273 K",
+                options: ["0 K", "100 K", "273 K", "373 K"],
+                explanation: "T(K) = t(°C) + 273 = 0 + 273 = 273 K."
+            },
+            {
+                id: 19,
+                category: "Физика",
+                question: "Қувур диаметри бир хил бўлиб, ҳажмий сарф ошса, оқим тезлиги қандай ўзгаради?",
+                correct: "Ортади",
+                options: ["Ортади", "Камаяди", "Ўзгармайди", "Нол бўлади"],
+                explanation: "v = Q / S бўлгани учун кесим юзаси (S) ўзгармас бўлганда сарф (Q) ошса, тезлик (v) ҳам ортади."
+            },
+            {
+                id: 20,
+                category: "Физика",
+                question: "Иссиқлик табиий равишда қайси йўналишда узатилади?",
+                correct: "Иссиқ жисмдан совуқ жисмга",
+                options: ["Совуқ жисмдан иссиқ жисмга", "Иссиқ жисмдан совуқ жисмга", "Фақат юқорига", "Фақат босим таъсирида"],
+                explanation: "Термодинамиканинг иккинчи қонунига кўра, иссиқлик ўз-ўзидан ҳарорати юқори жисмдан ҳарорати паст жисмга узатилади."
+            },
+            {
+                id: 21,
+                category: "Нефт-газ соҳаси",
+                question: "Сепараторнинг асосий вазифаси?",
+                correct: "Оқим таркибидаги фазаларни ажратиш",
+                options: ["Газни сиқиш", "Оқим таркибидаги фазаларни ажратиш", "Электр ишлаб чиқариш", "Қувурни қиздириш"],
+                explanation: "Сепаратор газ, суюқ углеводород (нефт/конденсат), сув ва механик заррачаларни бир-биридан ажратиш учун хизмат қилади."
+            },
+            {
+                id: 22,
+                category: "Нефт-газ соҳаси",
+                question: "Компрессорнинг асосий вазифаси:",
+                correct: "Газ босимини ошириш",
+                options: ["Газ босимини ошириш", "Газни сақлаш", "Нефтни сувдан ажратиш", "Қувурни тозалаш"],
+                explanation: "Компрессор газни сиқиб, унинг босимини ошириш ва узатиш учун ишлатилади."
+            },
+            {
+                id: 23,
+                category: "Нефт-газ соҳаси",
+                question: "Қудуқ устидаги фонтан арматураси нима учун хизмат қилади?",
+                correct: "Оқим ва босимни бошқариш",
+                options: ["Оқим ва босимни бошқариш", "Газни совитиш", "Электр ишлаб чиқариш", "Газ таркибини лабораторияда аниқлаш"],
+                explanation: "Фонтан арматураси қудуқ оғзини гермитизациялаш, маҳсулот оқимини ва босимини назорат қилиш ҳамда бошқариш учун хизмат қилади."
+            },
+            {
+                id: 24,
+                category: "Нефт-газ соҳаси",
+                question: "Манометр нима ўлчайди?",
+                correct: "Босим",
+                options: ["Ҳарорат", "Босим", "Сарф", "Зичлик"],
+                explanation: "Манометр — суюқлик ёки газларнинг босимини ўлчовчи асбоб."
+            },
+            {
+                id: 25,
+                category: "Нефт-газ соҳаси",
+                question: "Расходомернинг вазифаси:",
+                correct: "Оқим сарфини ўлчаш",
+                options: ["Босимни ўлчаш", "Оқим сарфини ўлчаш", "Температурани ўлчаш", "Коррозияни ўлчаш"],
+                explanation: "Расходомер (сарф ўлчагич) вақт бирлиги ичида қувурдан ўтаётган модда миқдорини (сарфини) ўлчайди."
+            },
+            {
+                id: 26,
+                category: "Нефт-газ соҳаси",
+                question: "Газ қувурида ингибитор асосан нима мақсадда қўлланади?",
+                correct: "Коррозияни камайтириш",
+                options: ["Коррозияни камайтириш", "Газ босимини автоматик ошириш", "Қувур диаметрини ошириш", "Металлни қаттиқлаштириш"],
+                explanation: "Коррозия ёки гидрат ингибиторлари қувурнинг ички емирилиши (коррозияси) ёки гидрат тиқинлари ҳосил бўлишининг олдини олади."
+            },
+            {
+                id: 27,
+                category: "Нефт-газ соҳаси",
+                question: "Газ қувурини поршень — PIG билан тозалашнинг асосий мақсади?",
+                correct: "Қувур ичидаги суюқлик ва ифлосликларни чиқариш",
+                options: ["Қувур ичидаги суюқлик ва ифлосликларни чиқариш", "Газни иситиш", "Газ таркибини ўзгартириш", "Қувур деворини қалинлаштириш"],
+                explanation: "Тозалаш поршени (PIG) қувур ичида тўпланган суюқлик, конденсат ва механик чўкиндиларни ҳайдаб чиқаради."
+            },
+            {
+                id: 28,
+                category: "Нефт-газ соҳаси",
+                question: "Газ таркибида H₂S мавжудлигида энг муҳим хавф қайси?",
+                correct: "Заҳарлилик ва коррозион хавф",
+                options: ["Газ ранги ўзгариши", "Заҳарлилик ва коррозион хавф", "Газнинг оғирлиги нол бўлиши", "Босим йўқолиши шарт"],
+                explanation: "Водород сульфид (H₂S) ўта заҳарли газ бўлиб, металл ускуналарда кучли коррозион емирилишни келтириб чиқаради."
+            },
+            {
+                id: 29,
+                category: "Нефт-газ соҳаси",
+                question: "Авариявий ёпиш клапани — ESD клапанининг вазифаси?",
+                correct: "Авария ҳолатида оқимни хавфсиз тўхтатиш",
+                options: ["Авария ҳолатида оқимни хавфсиз тўхтатиш", "Газни доимий қиздириш", "Маҳсулот ҳисобини юритиш", "Қувур диаметрини назорат қилиш"],
+                explanation: "ESD (Emergency Shutdown Valve) — хавфли ёки авариявий вазият юзага келганда оқимни тезкор ва хавфсиз тўхтатиш клапанидир."
+            },
+            {
+                id: 30,
+                category: "Нефт-газ соҳаси",
+                question: "Газ тайёрлаш жараёнида сув ва оғир углеводородларни ажратишнинг муҳим сабабларидан бири?",
+                correct: "Гидрат ҳосил бўлиши ва технологик муаммоларни камайтириш",
+                options: ["Гидрат ҳосил бўлиши ва технологик муаммоларни камайтириш", "Газ рангини ўзгартириш", "Қувур узунлигини камайтириш", "Компрессор айланиш сонини доим икки марта ошириш"],
+                explanation: "Газ таркибидаги сув қувурларда кристаллогидрат муз тиқинларини ва коррозияни юзага келтиради."
+            },
+            {
+                id: 31,
+                category: "Ишлаб чиқариш мантиғи",
+                question: "Оператор газ қувурида босим 24 дан 17 kgf/cm² гача кескин тушганини кўрди. Биринчи ҳаракат қайси?",
+                correct: "Асбоб кўрсаткичини текшириб, технологик схема ва хавфсизлик тартиби бўйича сабабни аниқлаш",
+                options: [
+                    "Босимни дарҳол максимал ошириш",
+                    "Асбоб кўрсаткичини текшириб, технологик схема ва хавфсизлик тартиби бўйича сабабни аниқлаш",
+                    "Ҳимоя тизимларини ўчириш",
+                    "Ишни ўзгаришсиз давом эттириш"
+                ],
+                explanation: "Ҳар қандай кескин ўзгаришда аввало ўлчов асбоби ва боғлиқ параметрлар текширилади ҳамда регламент бўйича сабаб аниқланади."
+            },
+            {
+                id: 32,
+                category: "Ишлаб чиқариш мантиғи",
+                question: "Компрессорда вибрация кескин ошди. Ёш муҳандис нима қилиши керак?",
+                correct: "Технологик регламент ва авариявий ҳаракатлар тартиби бўйича чора кўриб, сабабни аниқлаш",
+                options: [
+                    "Эътибор бермаслик",
+                    "Айланиш частотасини максимал ошириш",
+                    "Технологик регламент ва авариявий ҳаракатлар тартиби бўйича чора кўриб, сабабни аниқлаш",
+                    "Ҳимоя датчикларини ўчириш"
+                ],
+                explanation: "Вибрация ошиши жиддий механик носозлик белгиси бўлиши мумкин, шунинг учун регламент ва авариявий йўриқнома асосида ҳаракат қилинади."
+            },
+            {
+                id: 33,
+                category: "Ишлаб чиқариш мантиғи",
+                question: "Бир хил режимда ишлаётган қурилмада маҳсулот чиқиши 10 т/соатдан 8 т/соатга тушиб кетди. Энг тўғри муҳандислик ёндашуви?",
+                correct: "Кириш параметрлари, босим, температура, сарф ва ускуналар режимини таҳлил қилиш",
+                options: [
+                    "Дарҳол ускунани алмаштириш",
+                    "Кириш параметрлари, босим, температура, сарф ва ускуналар режимини таҳлил қилиш",
+                    "Фақат операторни айблаш",
+                    "Ҳисоботда 10 т/соат деб қолдириш"
+                ],
+                explanation: "Унумдорлик тушганда тизимли равишда кириш хомашё параметрлари ва технологик режим кўрсаткичлари таҳлил қилинади."
+            },
+            {
+                id: 34,
+                category: "Ишлаб чиқариш мантиғи",
+                question: "Газ анализатори юқори H₂S концентрациясини кўрсатди. Нима биринчи ўринда туради?",
+                correct: "Ходимлар хавфсизлиги ва белгиланган авариявий тартиб",
+                options: [
+                    "Ишлаб чиқариш ҳажми",
+                    "Ходимлар хавфсизлиги ва белгиланган авариявий тартиб",
+                    "Электр энергия тежаш",
+                    "Ҳисоботни тўлдириш"
+                ],
+                explanation: "Заҳарли газ сизиб чиққанда ёки меъёрдан ошганда инсон ҳаёти ва хавфсизлиги энг устувор вазифа ҳисобланади."
+            },
+            {
+                id: 35,
+                category: "Ишлаб чиқариш мантиғи",
+                question: "Ёш муҳандис технологик параметр меъёрдан чиққанини аниқлади, лекин сабабини билмайди. Қайси ёндашув профессионал ҳисобланади?",
+                correct: "Маълумотларни текшириш, регламент ва схема асосида таҳлил қилиш, зарур ҳолда масъул мутахассисга хабар бериш",
+                options: [
+                    "Тахмин асосида ускунани созлаш",
+                    "Маълумотларни текшириш, регламент ва схема асосида таҳлил қилиш, зарур ҳолда масъул мутахассисга хабар бериш",
+                    "Ҳодисани яшириш",
+                    "Назорат-ўлчов асбобларини ўчириш"
+                ],
+                explanation: "Таваккалчилик ва яшириш аварияга олиб келади; маълумотларни таҳлил қилиш ва катта мутахассис/операторни хабардор қилиш тўғри йўлдир."
+            }
+        ];
+
+        // ==========================================
+        // 2. PROCEDURAL QUESTION GENERATORS
+        // ==========================================
+        function randInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function randChoice(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        function formatNum(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+        }
+
+        const DYNAMIC_GENERATORS = [
+            // Gen 1: Gas flow rate (м³/соат * соат -> млн м³)
+            function() {
+                const flowThousands = randChoice([250, 300, 350, 400, 420, 450, 500, 600]);
+                const hours = randInt(4, 12);
+                const totalMillions = (flowThousands * hours) / 1000;
+                const correctStr = totalMillions.toFixed(2).replace('.', ',') + " млн м³";
+
+                const d1 = (totalMillions - 0.4).toFixed(2).replace('.', ',') + " млн м³";
+                const d2 = (totalMillions + 0.3).toFixed(2).replace('.', ',') + " млн м³";
+                const d3 = (totalMillions + 0.65).toFixed(2).replace('.', ',') + " млн м³";
+
+                return {
+                    category: "Математика",
+                    isGenerated: true,
+                    question: `Газ сарфи ${formatNum(flowThousands * 1000)} м³/соат. ${hours} соатда қанча газ ўтади?`,
+                    correct: correctStr,
+                    options: [correctStr, d1, d2, d3],
+                    explanation: `${formatNum(flowThousands * 1000)} м³/соат × ${hours} соат = ${formatNum(flowThousands * 1000 * hours)} м³ = ${correctStr}.`
+                };
+            },
+            // Gen 2: Pressure drop percentage
+            function() {
+                const p1 = randChoice([20, 25, 40, 50, 80, 100]);
+                const dropPercent = randChoice([10, 15, 20, 25, 30, 40]);
+                const p2 = p1 * (100 - dropPercent) / 100;
+                const correctStr = `${dropPercent}%`;
+                const distractors = ["10%", "15%", "20%", "25%", "30%", "35%", "40%"].filter(x => x !== correctStr).slice(0, 3);
+
+                return {
+                    category: "Математика",
+                    isGenerated: true,
+                    question: `Қувурда босим ${p1} kgf/cm² дан ${p2} kgf/cm² гача тушди. Пасайиш неча фоиз?`,
+                    correct: correctStr,
+                    options: [correctStr, ...distractors],
+                    explanation: `Босим фарқи: ${p1} - ${p2} = ${p1 - p2} kgf/cm². Фоиз улуши: (${p1 - p2} / ${p1}) × 100% = ${dropPercent}%.`
+                };
+            },
+            // Gen 3: Pump volume in minutes
+            function() {
+                const rate = randChoice([120, 180, 240, 300, 360, 420, 480]);
+                const mins = randChoice([10, 15, 20, 30, 40, 45]);
+                const vol = (rate * mins) / 60;
+                const correctStr = `${vol} м³`;
+                const optionsSet = new Set([correctStr, `${vol + 20} м³`, `${Math.max(10, vol - 20)} м³`, `${vol + 40} м³`]);
+
+                return {
+                    category: "Математика",
+                    isGenerated: true,
+                    question: `Насос ${rate} м³/соат суюқлик ҳайдайди. ${mins} минутда қанча суюқлик ҳайдайди?`,
+                    correct: correctStr,
+                    options: Array.from(optionsSet),
+                    explanation: `${mins} минут соатнинг ${mins}/60 қисмига тенг. Ҳажм: ${rate} × (${mins} / 60) = ${vol} м³.`
+                };
+            },
+            // Gen 4: Pipe cross-section area
+            function() {
+                const d = randChoice([1, 2, 0.5, 0.8, 1.2]);
+                const area = +(3.14 * d * d / 4).toFixed(4);
+                const correctStr = area.toString().replace('.', ',') + " м²";
+                const d1 = +(area * 2).toFixed(4);
+                const d2 = +(3.14 * d * d).toFixed(4);
+                const d3 = +(area / 2).toFixed(4);
+
+                return {
+                    category: "Математика",
+                    isGenerated: true,
+                    question: `Ички диаметри ${d.toString().replace('.', ',')} м бўлган қувурнинг кесим юзаси қанча? π = 3,14.`,
+                    correct: correctStr,
+                    options: [
+                        correctStr,
+                        d1.toString().replace('.', ',') + " м²",
+                        d2.toString().replace('.', ',') + " м²",
+                        d3.toString().replace('.', ',') + " м²"
+                    ],
+                    explanation: `S = π × d² / 4 = 3,14 × (${d})² / 4 = ${correctStr}.`
+                };
+            },
+            // Gen 5: Production increase %
+            function() {
+                const pairs = [
+                    { oldVal: 8, newVal: 10, pct: 25 },
+                    { oldVal: 10, newVal: 12, pct: 20 },
+                    { oldVal: 12, newVal: 15, pct: 25 },
+                    { oldVal: 20, newVal: 23, pct: 15 },
+                    { oldVal: 15, newVal: 18, pct: 20 },
+                    { oldVal: 20, newVal: 26, pct: 30 }
+                ];
+                const item = randChoice(pairs);
+                const correctStr = `${item.pct}%`;
+                const distractors = ["15%", "20%", "25%", "30%", "35%", "40%"].filter(x => x !== correctStr).slice(0, 3);
+
+                return {
+                    category: "Математика",
+                    isGenerated: true,
+                    question: `Газ ишлаб чиқариш ${item.oldVal} т/соатдан ${item.newVal} т/соатга ошди. Ўсиш неча фоиз?`,
+                    correct: correctStr,
+                    options: [correctStr, ...distractors],
+                    explanation: `Ўсиш миқдори: ${item.newVal} - ${item.oldVal} = ${item.newVal - item.oldVal} т/соат. Фоизда: (${item.newVal - item.oldVal} / ${item.oldVal}) × 100% = ${item.pct}%.`
+                };
+            },
+            // Gen 6: Multiple compressors total output
+            function() {
+                const count = randInt(2, 5);
+                const unitFlow = randChoice([120, 150, 180, 200, 250]);
+                const total = count * unitFlow;
+                const correctStr = `${formatNum(total * 1000)} м³/соат`;
+                const d1 = `${formatNum((total - unitFlow) * 1000)} м³/соат`;
+                const d2 = `${formatNum((total + 50) * 1000)} м³/соат`;
+                const d3 = `${formatNum((total + unitFlow) * 1000)} м³/соат`;
+
+                return {
+                    category: "Математика",
+                    isGenerated: true,
+                    question: `${count} та компрессорнинг ҳар бири ${formatNum(unitFlow * 1000)} м³/соат газ ҳайдаса, умумий унумдорлик қанча?`,
+                    correct: correctStr,
+                    options: [correctStr, d1, d2, d3],
+                    explanation: `Умумий унумдорлик: ${count} × ${formatNum(unitFlow * 1000)} = ${correctStr}.`
+                };
+            },
+            // Gen 7: Pipe replacement length
+            function() {
+                const len = randChoice([400, 500, 600, 800, 1000, 1200]);
+                const pct = randChoice([10, 15, 20, 25, 30]);
+                const ans = (len * pct) / 100;
+                const correctStr = `${ans} м`;
+                const options = [correctStr, `${ans - 15} м`, `${ans + 20} м`, `${ans + 35} м`];
+
+                return {
+                    category: "Математика",
+                    isGenerated: true,
+                    question: `${len} м узунликдаги қувурнинг ${pct}% қисми алмаштирилса, неча метр қувур керак?`,
+                    correct: correctStr,
+                    options: options,
+                    explanation: `${len} м × ${pct}% / 100% = ${ans} м.`
+                };
+            },
+            // Gen 8: Linear equation ax + bx = c
+            function() {
+                const k = randInt(2, 4);
+                const xVal = randInt(4, 12);
+                const total = (1 + k) * xVal;
+                const correctStr = `${xVal}`;
+                const options = [correctStr, `${xVal - 2}`, `${xVal + 3}`, `${xVal * 2}`];
+
+                return {
+                    category: "Математика",
+                    isGenerated: true,
+                    question: `x + ${k}x = ${total} бўлса, x қанча?`,
+                    correct: correctStr,
+                    options: options,
+                    explanation: `${1 + k}x = ${total} => x = ${total} / ${1 + k} = ${xVal}.`
+                };
+            },
+            // Gen 9: Daily output to hourly output
+            function() {
+                const hourly = randChoice([200, 250, 300, 350, 400, 450, 500]);
+                const daily = hourly * 24;
+                const correctStr = `${hourly} м³/соат`;
+                const options = [
+                    correctStr,
+                    `${hourly - 50} м³/соат`,
+                    `${hourly + 60} м³/соат`,
+                    `${hourly + 100} м³/соат`
+                ];
+
+                return {
+                    category: "Математика",
+                    isGenerated: true,
+                    question: `Қурилма суткада ${formatNum(daily)} м³ маҳсулот ишлаб чиқарса, ўртача соатлик ишлаб чиқариш қанча?`,
+                    correct: correctStr,
+                    options: options,
+                    explanation: `Бир суткада 24 соат бор: ${formatNum(daily)} / 24 = ${hourly} м³/соат.`
+                };
+            },
+            // Gen 10: Diameter multiplier vs Area multiplier
+            function() {
+                const mult = randChoice([2, 3, 4]);
+                const areaMult = mult * mult;
+                const correctStr = `${areaMult} марта`;
+                const optionsSet = new Set([correctStr, `${mult} марта`, `${mult * 2 + 1} марта`, `${mult * mult * 2} марта`]);
+
+                return {
+                    category: "Математика",
+                    isGenerated: true,
+                    question: `Қувур диаметри ${mult} марта оширилса, кесим юзаси неча марта ошади?`,
+                    correct: correctStr,
+                    options: Array.from(optionsSet),
+                    explanation: `Кесим юзаси диаметрга квадрат пропорционал: ${mult}² = ${areaMult} марта ошади.`
+                };
+            },
+            // Gen 11: Newton's second law calculation F = ma
+            function() {
+                const m = randChoice([15, 20, 25, 30, 40, 50]);
+                const a = randInt(2, 6);
+                const f = m * a;
+                const correctStr = `${f} N`;
+                const options = [correctStr, `${m + a} N`, `${f - 15} N`, `${f + 20} N`];
+
+                return {
+                    category: "Физика",
+                    isGenerated: true,
+                    question: `${m} кг жисмга ${a} м/с² тезланиш берилди. Куч қанча?`,
+                    correct: correctStr,
+                    options: options,
+                    explanation: `F = m × a = ${m} кг × ${a} м/с² = ${f} N.`
+                };
+            },
+            // Gen 12: Celsius to Kelvin conversion
+            function() {
+                const c = randChoice([0, 20, 27, 50, 100]);
+                const k = c + 273;
+                const correctStr = `${k} K`;
+                const options = [correctStr, `${c} K`, `${k - 100} K`, `${k + 100} K`];
+
+                return {
+                    category: "Физика",
+                    isGenerated: true,
+                    question: `${c}°C ҳарорат тахминан неча Кельвинга тенг?`,
+                    correct: correctStr,
+                    options: options,
+                    explanation: `Кельвин шкаласига ўтиш: T(K) = ${c} + 273 = ${k} K.`
+                };
+            }
+        ];
+
+        // ==========================================
+        // 3. STATE VARIABLES
+        // ==========================================
+        let currentQuestions = [];
+        let currentIndex = 0;
+        let userAnswers = []; // stores selected option string or null
+        let instantFeedback = true;
+        let hasTimer = true;
+        let timeRemaining = 0;
+        let totalTimeElapsed = 0;
+        let timerInterval = null;
+        let currentReviewFilter = 'all';
+
+        // Utility: Fisher-Yates shuffle
+        function shuffleArray(arr) {
+            const copy = [...arr];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+
+        // Build question list according to chosen settings
+        function buildQuizQuestions(mode, count) {
+            let pool = [];
+
+            if (mode === 'original') {
+                // Use exact 35 questions from file
+                const shuffledBase = shuffleArray(BASE_QUESTIONS);
+                for (let i = 0; i < count; i++) {
+                    const q = shuffledBase[i % shuffledBase.length];
+                    pool.push({
+                        ...q,
+                        isGenerated: false,
+                        shuffledOptions: shuffleArray(q.options)
+                    });
+                }
+            } else {
+                // Dynamic mode: combine procedural math/physics questions + conceptual questions (IDs 11, 13-17, 19-35)
+                const conceptualIds = [11, 13, 14, 15, 16, 17, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35];
+                const conceptualPool = shuffleArray(BASE_QUESTIONS.filter(q => conceptualIds.includes(q.id)));
+
+                // Roughly 40% generated math/physics problems, 60% conceptual/logic questions
+                const numGenerated = Math.round(count * 0.4);
+                const numConceptual = count - numGenerated;
+
+                for (let i = 0; i < numGenerated; i++) {
+                    const genFunc = DYNAMIC_GENERATORS[i % DYNAMIC_GENERATORS.length];
+                    const generatedQ = genFunc();
+                    pool.push({
+                        ...generatedQ,
+                        shuffledOptions: shuffleArray(generatedQ.options)
+                    });
+                }
+
+                for (let i = 0; i < numConceptual; i++) {
+                    const baseQ = conceptualPool[i % conceptualPool.length];
+                    pool.push({
+                        ...baseQ,
+                        isGenerated: false,
+                        shuffledOptions: shuffleArray(baseQ.options)
+                    });
+                }
+
+                pool = shuffleArray(pool);
+            }
+
+            return pool;
+        }
+
+        // ==========================================
+        // 4. QUIZ FLOW FUNCTIONS
+        // ==========================================
+        function startQuiz() {
+            const mode = document.querySelector('input[name="quiz-mode"]:checked').value;
+            const count = parseInt(document.querySelector('input[name="question-count"]:checked').value, 10);
+            instantFeedback = document.getElementById('instant-feedback-toggle').checked;
+            hasTimer = document.getElementById('timer-toggle').checked;
+
+            currentQuestions = buildQuizQuestions(mode, count);
+            userAnswers = new Array(currentQuestions.length).fill(null);
+            currentIndex = 0;
+            totalTimeElapsed = 0;
+            timeRemaining = count * 60; // 1 minute per question
+
+            // Switch UI screens
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('results-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            document.getElementById('header-controls').classList.remove('hidden');
+
+            // Setup Timer
+            clearInterval(timerInterval);
+            const timerBox = document.getElementById('timer-box');
+            if (hasTimer) {
+                timerBox.classList.remove('hidden');
+                updateTimerDisplay();
+                timerInterval = setInterval(() => {
+                    timeRemaining--;
+                    totalTimeElapsed++;
+                    updateTimerDisplay();
+                    if (timeRemaining <= 0) {
+                        clearInterval(timerInterval);
+                        finishQuiz();
+                    }
+                }, 1000);
+            } else {
+                timerBox.classList.add('hidden');
+                timerInterval = setInterval(() => {
+                    totalTimeElapsed++;
+                }, 1000);
+            }
+
+            renderPalette();
+            renderCurrentQuestion();
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timeRemaining / 60);
+            const secs = timeRemaining % 60;
+            const formatted = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            document.getElementById('timer-display').textContent = formatted;
+        }
+
+        function formatSeconds(sec) {
+            const m = Math.floor(sec / 60);
+            const s = sec % 60;
+            return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+
+        function renderCurrentQuestion() {
+            const q = currentQuestions[currentIndex];
+            const selectedAnswer = userAnswers[currentIndex];
+            const total = currentQuestions.length;
+
+            // Update progress bar & counter
+            const pct = ((currentIndex + 1) / total) * 100;
+            document.getElementById('progress-bar').style.width = `${pct}%`;
+            document.getElementById('question-counter').textContent = `Савол ${currentIndex + 1} / ${total}`;
+            document.getElementById('question-category-badge').textContent = q.category;
+
+            const genBadge = document.getElementById('generated-badge');
+            if (q.isGenerated) {
+                genBadge.classList.remove('hidden');
+            } else {
+                genBadge.classList.add('hidden');
+            }
+
+            // Question title
+            document.getElementById('question-text').textContent = q.question;
+
+            // Render options
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            const letters = ['A', 'B', 'C', 'D'];
+
+            q.shuffledOptions.forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+
+                let baseClasses = "option-btn w-full text-left p-4 rounded-xl border-2 flex items-start space-x-3.5 ";
+                let badgeClasses = "w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5 ";
+
+                const isSelected = selectedAnswer === optText;
+                const isCorrect = optText === q.correct;
+
+                if (selectedAnswer !== null && instantFeedback) {
+                    // Instant feedback mode after user selects an option
+                    btn.disabled = true;
+                    if (isCorrect) {
+                        baseClasses += "border-emerald-500 bg-emerald-50/80 text-emerald-950 font-semibold";
+                        badgeClasses += "bg-emerald-600 text-white";
+                    } else if (isSelected && !isCorrect) {
+                        baseClasses += "border-rose-500 bg-rose-50/80 text-rose-950 font-semibold";
+                        badgeClasses += "bg-rose-600 text-white";
+                    } else {
+                        baseClasses += "border-slate-200 bg-white text-slate-500 opacity-75";
+                        badgeClasses += "bg-slate-100 text-slate-500";
+                    }
+                } else {
+                    // Exam mode or not yet answered
+                    if (isSelected) {
+                        baseClasses += "border-amber-500 bg-amber-50/60 text-slate-900 font-semibold";
+                        badgeClasses += "bg-amber-500 text-slate-950";
+                    } else {
+                        baseClasses += "border-slate-200 hover:border-slate-300 bg-white text-slate-800";
+                        badgeClasses += "bg-slate-100 text-slate-700";
+                    }
+                    btn.onclick = () => selectOption(optText);
+                }
+
+                btn.className = baseClasses;
+                btn.innerHTML = `
+                    <span class="${badgeClasses}">${letters[idx]}</span>
+                    <span class="text-sm sm:text-base leading-snug">${optText}</span>
+                `;
+                container.appendChild(btn);
+            });
+
+            // Explanation box visibility
+            const expBox = document.getElementById('explanation-box');
+            if (selectedAnswer !== null && instantFeedback && q.explanation) {
+                document.getElementById('explanation-text').textContent = q.explanation;
+                expBox.classList.remove('hidden');
+            } else {
+                expBox.classList.add('hidden');
+            }
+
+            // Prev / Next button states
+            document.getElementById('prev-btn').disabled = currentIndex === 0;
+            const nextBtnText = document.getElementById('next-btn-text');
+            if (currentIndex === total - 1) {
+                nextBtnText.textContent = "Якунлаш";
+            } else {
+                nextBtnText.textContent = "Кейинги";
+            }
+
+            updatePaletteHighlight();
+        }
+
+        function selectOption(optText) {
+            userAnswers[currentIndex] = optText;
+            renderCurrentQuestion();
+        }
+
+        function prevQuestion() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderCurrentQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (currentIndex < currentQuestions.length - 1) {
+                currentIndex++;
+                renderCurrentQuestion();
+            } else {
+                showConfirmFinishModal();
+            }
+        }
+
+        function jumpToQuestion(index) {
+            currentIndex = index;
+            renderCurrentQuestion();
+        }
+
+        function renderPalette() {
+            const grid = document.getElementById('palette-grid');
+            grid.innerHTML = '';
+            currentQuestions.forEach((_, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.id = `palette-btn-${idx}`;
+                btn.textContent = idx + 1;
+                btn.onclick = () => jumpToQuestion(idx);
+                btn.className = "h-9 rounded-lg font-bold text-xs border transition flex items-center justify-center";
+                grid.appendChild(btn);
+            });
+            updatePaletteHighlight();
+        }
+
+        function updatePaletteHighlight() {
+            const answeredCount = userAnswers.filter(a => a !== null).length;
+            document.getElementById('answered-count-text').textContent = `${answeredCount} / ${currentQuestions.length} белгиланди`;
+
+            currentQuestions.forEach((q, idx) => {
+                const btn = document.getElementById(`palette-btn-${idx}`);
+                if (!btn) return;
+
+                const ans = userAnswers[idx];
+                const isCurrent = idx === currentIndex;
+
+                let classes = "h-9 rounded-lg font-bold text-xs transition flex items-center justify-center ";
+
+                if (isCurrent) {
+                    classes += "ring-2 ring-offset-1 ring-amber-500 bg-amber-500 text-slate-950 border-amber-600";
+                } else if (ans !== null) {
+                    if (instantFeedback) {
+                        if (ans === q.correct) {
+                            classes += "bg-emerald-500 text-white border-emerald-600";
+                        } else {
+                            classes += "bg-rose-500 text-white border-rose-600";
+                        }
+                    } else {
+                        classes += "bg-slate-800 text-white border-slate-900";
+                    }
+                } else {
+                    classes += "bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200";
+                }
+
+                btn.className = classes;
+            });
+        }
+
+        // ==========================================
+        // 5. FINISH & RESULTS LOGIC
+        // ==========================================
+        function showConfirmFinishModal() {
+            const unanswered = userAnswers.filter(a => a === null).length;
+            const desc = document.getElementById('confirm-modal-desc');
+            if (unanswered > 0) {
+                desc.textContent = `Сизда ҳали ${unanswered} та белгиланмаган савол бор. Белгиланмаган саволлар хато деб ҳисобланади. Якунлашни тасдиқлайсизми?`;
+            } else {
+                desc.textContent = "Сиз барча саволларга жавоб белгиладингиз. Тестни якунлаб, натижаларни кўришни хоҳлайсизми?";
+            }
+            document.getElementById('confirm-modal').classList.remove('hidden');
+        }
+
+        function closeConfirmFinishModal() {
+            document.getElementById('confirm-modal').classList.add('hidden');
+        }
+
+        function finishQuiz() {
+            closeConfirmFinishModal();
+            clearInterval(timerInterval);
+
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('header-controls').classList.add('hidden');
+            document.getElementById('results-screen').classList.remove('hidden');
+
+            let correctCount = 0;
+            currentQuestions.forEach((q, idx) => {
+                if (userAnswers[idx] === q.correct) {
+                    correctCount++;
+                }
+            });
+
+            const total = currentQuestions.length;
+            const wrongCount = total - correctCount;
+            const percent = Math.round((correctCount / total) * 100);
+
+            document.getElementById('stat-percent').textContent = `${percent}%`;
+            document.getElementById('stat-correct').textContent = correctCount;
+            document.getElementById('stat-wrong').textContent = wrongCount;
+            document.getElementById('stat-time').textContent = formatSeconds(totalTimeElapsed);
+
+            const titleEl = document.getElementById('result-title');
+            const badgeEl = document.getElementById('result-badge');
+
+            if (percent >= 85) {
+                titleEl.textContent = "Аъло натижа! Табриклаймиз!";
+                badgeEl.textContent = "Юқори даража";
+                badgeEl.className = "inline-block px-3 py-1 rounded-full text-xs font-bold mb-2 bg-emerald-100 text-emerald-800";
+            } else if (percent >= 65) {
+                titleEl.textContent = "Яхши натижа!";
+                badgeEl.textContent = "Ўртадан юқори";
+                badgeEl.className = "inline-block px-3 py-1 rounded-full text-xs font-bold mb-2 bg-amber-100 text-amber-800";
+            } else {
+                titleEl.textContent = "Яна машқ қилиш тавсия этилади";
+                badgeEl.textContent = "Қўшимча тайёргарлик керак";
+                badgeEl.className = "inline-block px-3 py-1 rounded-full text-xs font-bold mb-2 bg-rose-100 text-rose-800";
+            }
+
+            filterReview('all');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function filterReview(filterType) {
+            currentReviewFilter = filterType;
+
+            // Update filter button styles
+            ['all', 'wrong', 'correct'].forEach(type => {
+                const btn = document.getElementById(`filter-${type}`);
+                if (type === filterType) {
+                    btn.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-white";
+                } else {
+                    btn.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200";
+                }
+            });
+
+            const list = document.getElementById('review-list');
+            list.innerHTML = '';
+
+            currentQuestions.forEach((q, idx) => {
+                const userAns = userAnswers[idx];
+                const isCorrect = userAns === q.correct;
+
+                if (filterType === 'wrong' && isCorrect) return;
+                if (filterType === 'correct' && !isCorrect) return;
+
+                const card = document.createElement('div');
+                card.className = `p-5 rounded-xl border ${isCorrect ? 'border-emerald-200 bg-emerald-50/30' : 'border-rose-200 bg-rose-50/30'}`;
+
+                const statusBadge = isCorrect
+                    ? `<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">✓ Тўғри</span>`
+                    : `<span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-800">✗ ${userAns === null ? 'Белгиланмаган' : 'Хато'}</span>`;
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-slate-500">Савол #${idx + 1} • ${q.category}</span>
+                        ${statusBadge}
+                    </div>
+                    <p class="font-bold text-slate-900 text-sm sm:text-base mb-3">${q.question}</p>
+                    <div class="space-y-1.5 text-xs sm:text-sm">
+                        <div class="p-2.5 rounded-lg ${isCorrect ? 'bg-emerald-100/80 text-emerald-950 font-semibold' : 'bg-rose-100/80 text-rose-950'}">
+                            <span class="font-bold">Сизнинг жавобингиз:</span> ${userAns !== null ? userAns : 'Жавоб танланмаган'}
+                        </div>
+                        ${!isCorrect ? `
+                        <div class="p-2.5 rounded-lg bg-emerald-100/80 text-emerald-950 font-semibold">
+                            <span class="font-bold">Тўғри жавоб:</span> ${q.correct}
+                        </div>` : ''}
+                    </div>
+                    ${q.explanation ? `
+                    <div class="mt-3 pt-2.5 border-t border-slate-200/70 text-xs text-slate-600">
+                        <span class="font-semibold text-slate-700">Изоҳ:</span> ${q.explanation}
+                    </div>` : ''}
+                `;
+                list.appendChild(card);
+            });
+
+            if (list.children.length === 0) {
+                list.innerHTML = `<p class="text-center py-8 text-sm text-slate-500">Ушбу бўлимда саволлар мавжуд эмас.</p>`;
+            }
+        }
+
+        function restartSameSettings() {
+            startQuiz();
+        }
+
+        function backToMenu() {
+            clearInterval(timerInterval);
+            document.getElementById('results-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('header-controls').classList.add('hidden');
+            document.getElementById('start-screen').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
